@@ -6,11 +6,12 @@ import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 export enum TodoStatus {
     Incomplete = "INCOMPLETE",
     Complete = "COMPLETE",
-    Pending = "Pending",
+    InProgress = "IN_PROGRESS",
 }
 
 export interface TodoData {
@@ -21,6 +22,7 @@ export interface TodoData {
 
 const TodoForm = () => {
 
+    const navigate = useNavigate(); // Initialize navigate
     const { register, handleSubmit, formState: { errors, isSubmitting }, setValue } = useForm<TodoData>({
         defaultValues: {
             task: "",
@@ -30,62 +32,61 @@ const TodoForm = () => {
     });
 
     const onSubmit: SubmitHandler<TodoData> = (data: TodoData) => {
-        console.log("data in the form ", data);
+        const existingTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+        existingTasks.push(data);
+        localStorage.setItem('tasks', JSON.stringify(existingTasks));
+        console.log("Task added: ", data);
+        navigate('/tasks');
     };
 
     return (
         <div>
+            
             <form onSubmit={handleSubmit(onSubmit)}>
-
                 {/* Task Input */}
                 <TextField
                     label="Task"
                     variant="outlined"
                     fullWidth
                     margin="normal"
-                    placeholder="task should be added here..."
                     {...register("task", {
                         required: "Please enter the task to do."
                     })}
-                    error={!!errors.task}  // Error state
-                    helperText={errors.task?.message}  // Error message
+                    error={!!errors.task}  
+                    helperText={errors.task?.message}  
                 />
 
                 {/* Status Select */}
-                <FormControl
-                    fullWidth
-                    margin="normal"
-                    error={!!errors.status}  // Error state for Select
-                >
+                <FormControl fullWidth margin="normal" error={!!errors.status}>
                     <InputLabel>Status</InputLabel>
                     <Select
                         label="Status"
-                        defaultValue={TodoStatus.Incomplete}  // Default value
+                        defaultValue={TodoStatus.Incomplete}
                         {...register("status", {
                             required: "Please select a status."
                         })}
-                        onChange={(e) => setValue('status', e.target.value as TodoStatus)}  // Manually set the status value
+                        onChange={(e) => setValue('status', e.target.value as TodoStatus)}
                     >
                         <MenuItem value={TodoStatus.Incomplete}>Incomplete</MenuItem>
                         <MenuItem value={TodoStatus.Complete}>Complete</MenuItem>
-                        <MenuItem value={TodoStatus.Pending}>In Progress</MenuItem>
+                        <MenuItem value={TodoStatus.InProgress}>In Progress</MenuItem>
                     </Select>
-                    <FormHelperText>{errors.status?.message}</FormHelperText>  {/* Error message */}
+                    <FormHelperText>{errors.status?.message}</FormHelperText> 
                 </FormControl>
 
                 {/* Due Date Input */}
                 <TextField
                     label="Due Date"
-                    type="date"  // Set the type to "date"
+                    type="date"  
                     variant="outlined"
                     fullWidth
                     margin="normal"
                     {...register("dueDate", {
                         required: "Please select a due date.",
                     })}
-                    error={!!errors.dueDate}  // Error state
-                    helperText={errors.dueDate?.message}  // Error message
-                    InputLabelProps={{ shrink: true }}  // Make the label always show
+                    error={!!errors.dueDate}  
+                    helperText={errors.dueDate?.message}  
+                    InputLabelProps={{ shrink: true }}  
                 />
 
                 {/* Submit Button */}
@@ -97,7 +98,6 @@ const TodoForm = () => {
                 >
                     {isSubmitting ? "Submitting..." : "Add Task"}
                 </Button>
-
             </form>
         </div>
     );
