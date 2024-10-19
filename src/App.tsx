@@ -1,3 +1,4 @@
+import TodoWrapper from "./components/todoWrapper"
 
 function App() {
 
@@ -6,6 +7,7 @@ function App() {
 
     
     <>
+    <TodoWrapper/>
     </>
   )
 }

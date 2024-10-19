@@ -1,5 +1,5 @@
 
-const todoDetails = () => {
+const TodoDetails = () => {
   return (
     <div>
       
@@ -7,4 +7,4 @@ const todoDetails = () => {
   )
 }
 
-export default todoDetails
+export default TodoDetails
