@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -138,17 +138,24 @@ const TodoList = () => {
 
             {/* Dialog Component */}
             <Dialog open={openDialog} onClose={handleCloseDialog}>
-                <DialogTitle>Confirm Deletion</DialogTitle>
+                <DialogTitle>
+                    <div className="flex items-center">
+                        <IconButton edge="start" aria-label="delete" disabled>
+                            <DeleteIcon color="error" />
+                        </IconButton>
+                        Confirm Deletion
+                    </div>
+                </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         Are you sure you want to delete this task? This action cannot be undone.
                     </DialogContentText>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseDialog} color="primary">
+                <DialogActions sx={{ backgroundColor: '#f5f5f5' }}>
+                    <Button onClick={handleCloseDialog} variant="outlined" color="primary">
                         Cancel
                     </Button>
-                    <Button onClick={handleConfirmDelete} color="secondary" autoFocus>
+                    <Button onClick={handleConfirmDelete} variant="contained" color="error" autoFocus>
                         Delete
                     </Button>
                 </DialogActions>
