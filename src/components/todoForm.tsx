@@ -20,24 +20,26 @@ export interface TodoData {
     task: string;
     status: TodoStatus;
     dueDate: string;
-    startTime: string;  // New property for start time
-    endTime: string;    // New property for end time
+    startTime: string;
+    endTime: string;
 }
 
 const TodoForm = () => {
-
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
 
-    const { register, handleSubmit, formState: { errors, isSubmitting }, setValue } = useForm<TodoData>({
+    const { register, handleSubmit, formState: { errors, isSubmitting }, setValue, watch } = useForm<TodoData>({
         defaultValues: {
             task: "",
             status: TodoStatus.Incomplete,
             dueDate: "",
-            startTime: "",  // Default value for start time
-            endTime: ""     // Default value for end time
+            startTime: "",
+            endTime: ""
         }
     });
+
+    // Watch the status to dynamically set the value in the Select component
+    const statusValue = watch("status");
 
     useEffect(() => {
         if (id) {
@@ -47,8 +49,8 @@ const TodoForm = () => {
                 setValue("task", task.task);
                 setValue("status", task.status);
                 setValue("dueDate", task.dueDate);
-                setValue("startTime", task.startTime);  // Set start time
-                setValue("endTime", task.endTime);      // Set end time
+                setValue("startTime", task.startTime);
+                setValue("endTime", task.endTime);
             }
         }
     }, [id, setValue]);
@@ -90,7 +92,7 @@ const TodoForm = () => {
                     <InputLabel>Status</InputLabel>
                     <Select
                         label="Status"
-                        defaultValue={TodoStatus.Incomplete}
+                        value={statusValue || TodoStatus.Incomplete} // Use dynamic value
                         {...register("status", {
                             required: "Please select a status."
                         })}
@@ -116,36 +118,35 @@ const TodoForm = () => {
                     InputLabelProps={{ shrink: true }}
                 />
                 <div className="flex gap-4 w-full">
-                <TextField
-                    label="Start Time"
-                    type="time"
-                    variant="outlined"
-                    fullWidth
-                    margin="normal"
-                    {...register("startTime", {
-                        required: "Please select a start time.",
-                    })}
-                    error={!!errors.startTime}
-                    helperText={errors.startTime?.message}
-                    InputLabelProps={{ shrink: true }}
-                />
+                    <TextField
+                        label="Start Time"
+                        type="time"
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        {...register("startTime", {
+                            required: "Please select a start time.",
+                        })}
+                        error={!!errors.startTime}
+                        helperText={errors.startTime?.message}
+                        InputLabelProps={{ shrink: true }}
+                    />
 
-                <TextField
-                    label="End Time"
-                    type="time"
-                    variant="outlined"
-                    fullWidth
-                    margin="normal"
-                    {...register("endTime", {
-                        required: "Please select an end time.",
-                    })}
-                    error={!!errors.endTime}
-                    helperText={errors.endTime?.message}
-                    InputLabelProps={{ shrink: true }}
-                />
-
+                    <TextField
+                        label="End Time"
+                        type="time"
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        {...register("endTime", {
+                            required: "Please select an end time.",
+                        })}
+                        error={!!errors.endTime}
+                        helperText={errors.endTime?.message}
+                        InputLabelProps={{ shrink: true }}
+                    />
                 </div>
-               
+
                 <div className="mt-4">
                     <Button
                         variant="outlined"

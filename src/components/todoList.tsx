@@ -60,7 +60,7 @@ const TodoList = () => {
         return `${dateLabel}`;
     };
 
-    const getStatusLabelAndColor = (status: TodoStatus) => {
+        const getStatusLabelAndColor = (status: TodoStatus) => {
         switch (status) {
             case TodoStatus.Complete:
                 return { label: "Completed", color: "bg-green-500 text-white" };
@@ -84,12 +84,12 @@ const TodoList = () => {
                     todoTasks.map((task) => {
                         const { label, color } = getStatusLabelAndColor(task.status);
                         return (
-                            <div
-                                key={task.id}
-                                className="bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between"
-                            >
-                                <div className="flex items-center mb-2">
-                                    {getStatusIcon(task.status)}
+                        <div
+                            key={task.id}
+                            className="bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between"
+                        >
+                            <div className="flex items-center mb-2">
+                                {getStatusIcon(task.status)}
                                     <h2
                                         className={`text-xl font-semibold ml-2 ${
                                             task.status === TodoStatus.Complete
@@ -99,30 +99,30 @@ const TodoList = () => {
                                     >
                                         {task.task}
                                     </h2>
-                                </div>
-                                <div className="border-t border-gray-300 my-2"></div>
-                                <p className="text-gray-700">
-                                    {formatDueDateTime(task.dueDate)}
-                                    <span className="text-gray-500 opacity-75 ml-1">
+                            </div>
+                            <div className="border-t border-gray-300 my-2"></div>
+                            <p className="text-gray-700">
+                                {formatDueDateTime(task.dueDate)}
+                                <span className="text-gray-500 opacity-75 ml-1">
                                         {task.startTime} - {task.endTime}
-                                    </span>
-                                </p>
+                                </span>
+                            </p>
                                 {/* Status Label with Conditional Color */}
                                 <div className={`rounded-md w-fit px-4 py-1 mt-2 ${color}`}>
                                     {label}
                                 </div>
-                                <div className="flex justify-end mt-4">
-                                    <Button
-                                        onClick={() => onNavigateToEditTask(task.id)}
-                                        className="mr-2"
-                                    >
-                                        <EditIcon className="text-blue-500" />
-                                    </Button>
-                                    <Button onClick={() => onDeleteTask(task.id)}>
-                                        <DeleteIcon className="text-red-500" />
-                                    </Button>
-                                </div>
+                            <div className="flex justify-end mt-4">
+                                <Button
+                                    onClick={() => onNavigateToEditTask(task.id)}
+                                    className="mr-2"
+                                >
+                                    <EditIcon className="text-blue-500" />
+                                </Button>
+                                <Button onClick={() => onDeleteTask(task.id)}>
+                                    <DeleteIcon className="text-red-500" />
+                                </Button>
                             </div>
+                        </div>
                         );
                     })
                 )}
