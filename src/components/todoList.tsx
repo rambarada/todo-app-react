@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Tooltip } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -76,6 +76,18 @@ const TodoList = () => {
         return `${dateLabel}`;
     };
 
+    const getStatusLabelAndColor = (status: TodoStatus) => {
+        switch (status) {
+            case TodoStatus.Complete:
+                return { label: "Completed", color: "bg-green-500 text-white" };
+            case TodoStatus.InProgress:
+                return { label: "In Progress", color: "bg-blue-500 text-white" };
+            case TodoStatus.Incomplete:
+            default:
+                return { label: "Pending", color: "bg-gray-500 text-white" };
+        }
+    };
+
     return (
         <>
             <h1 className="text-4xl font-bold mb-2 text-center">TaskMaster</h1>
@@ -85,43 +97,53 @@ const TodoList = () => {
                 {todoTasks.length === 0 ? (
                     <p className="text-center text-gray-500">No tasks available.</p>
                 ) : (
-                    todoTasks.map((task) => (
-                        <div
-                            key={task.id}
-                            className="bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between"
-                        >
-                            <div className="flex items-center mb-2">
-                                {getStatusIcon(task.status)}
-                                <h2
-                                    className={`text-xl font-semibold ml-2 ${
-                                        task.status === TodoStatus.Complete
-                                            ? "line-through text-gray-500"
-                                            : ""
-                                    }`}
-                                >
-                                    {task.task}
-                                </h2>
+                    todoTasks.map((task) => {
+                        const { label, color } = getStatusLabelAndColor(task.status);
+                        return (
+                            <div
+                                key={task.id}
+                                className="bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between"
+                            >
+                                <div className="flex items-center mb-2">
+                                    {getStatusIcon(task.status)}
+                                    <h2
+                                        className={`text-xl font-semibold ml-2 ${
+                                            task.status === TodoStatus.Complete
+                                                ? "line-through text-gray-500"
+                                                : ""
+                                        }`}
+                                    >
+                                        {task.task}
+                                    </h2>
+                                </div>
+                                <div className="border-t border-gray-300 my-2"></div>
+                                <p className="text-gray-700">
+                                    {formatDueDateTime(task.dueDate)}
+                                    <span className="text-gray-500 opacity-75 ml-1">
+                                        {task.startTime} - {task.endTime}
+                                    </span>
+                                </p>
+                                <div className={`rounded-md w-fit px-4 py-1 mt-2 ${color}`}>
+                                    {label}
+                                </div>
+                                <div className="flex items-center justify-end mt-4">
+                                    <Tooltip title="Edit Task">
+                                        <Button
+                                            onClick={() => onNavigateToEditTask(task.id)}
+                                            sx={{ minWidth: '32px', padding: 0 }}
+                                        >
+                                            <EditIcon className="text-blue-500" />
+                                        </Button>
+                                    </Tooltip>
+                                    <Tooltip title="Delete Task">
+                                        <Button onClick={() => handleDeleteClick(task.id)} sx={{ minWidth: '32px', padding: 0 }}>
+                                            <DeleteIcon className="text-red-500" />
+                                        </Button>
+                                    </Tooltip>
+                                </div>
                             </div>
-                            <div className="border-t border-gray-300 my-2"></div>
-                            <p className="text-gray-700">
-                                {formatDueDateTime(task.dueDate)}
-                                <span className="text-gray-500 opacity-75 ml-1">
-                                    {task.startTime} - {task.endTime}
-                                </span>
-                            </p>
-                            <div className="flex items-center justify-end mt-4">
-                                <Button
-                                    onClick={() => onNavigateToEditTask(task.id)}
-                                    sx={{ minWidth: '32px', padding: 0 }}
-                                >
-                                    <EditIcon className="text-blue-500" />
-                                </Button>
-                                <Button onClick={() => handleDeleteClick(task.id)} sx={{ minWidth: '32px', padding: 0 }}>
-                                    <DeleteIcon className="text-red-500" />
-                                </Button>
-                            </div>
-                        </div>
-                    ))
+                        );
+                    })
                 )}
             </div>
 
